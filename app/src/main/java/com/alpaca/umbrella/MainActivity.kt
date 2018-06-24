@@ -1,61 +1,67 @@
 package com.alpaca.umbrella
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.alpaca.umbrella.weather.OpenWeatherAPI
-import com.alpaca.umbrella.weather.OpenWeatherAPIModule
+import com.alpaca.umbrella.weather.OpenWeatherInterceptor
 import com.alpaca.umbrella.weather.WeatherResponse
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-import com.alpaca.umbrella.weather.OpenWeatherAPIComponent.DaggerOpenWeatherAPIComponent
+class MainActivity: AppCompatActivity() {
 
-class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit  var api : OpenWeatherAPI
+    private lateinit var api : OpenWeatherAPI
+    private lateinit var retrofit: Retrofit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        injectDI()
-        getForecastForSevenDays("bucharest")
+        val apiClient = OkHttpClient.Builder()
+                            .addInterceptor(OpenWeatherInterceptor()).build()
 
+        retrofit = Retrofit.Builder().apply {
+            baseUrl(OpenWeatherAPI.BASE_URL)
+            addConverterFactory(GsonConverterFactory.create())
+            client(apiClient)
+        }.build()
 
+        api = retrofit.create(OpenWeatherAPI::class.java)
     }
 
-    private fun injectDI() {
-        DaggerOpenWeatherAPIComponent
-                .builder()
-                .openWeatherAPIModule(OpenWeatherAPIModule())
-                .build()
-                .inject()
+    /* on button click */
+    fun getWeather(v: View) {
+        getWeatherFromAPI("bucharest")
     }
 
-    fun getForecastForSevenDays(cityName: String) {
-        api.dailyForecast(cityName, 7).enqueue(object : Callback<WeatherResponse> {
+    fun getWeatherFromAPI(cityName : String) {
 
+        val call: Call<WeatherResponse> = api.getForecast(cityName, 1)
+
+        call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                response.body()?.let {
-                    //This method will be created in the next step.
-                    //createListForView(it)
+                val res: WeatherResponse? = response.body()
 
-                    toast("Salut!")
-                }
+                Log.d("RESPONSE", response.toString())
+                Log.d("RESPONSE BODY", response.body().toString())
+
+                Toast.makeText(applicationContext,"Temp is " + res?.forecast!![0].main.temp,
+                        Toast.LENGTH_LONG).show()
             }
 
             override fun onFailure(call: Call<WeatherResponse>?, t: Throwable) {
+                Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
                 t.printStackTrace()
             }
         })
     }
-
-    fun Context.toast(message: CharSequence) =
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 }
 
