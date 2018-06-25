@@ -10,7 +10,7 @@ interface OpenWeatherAPI {
         val BASE_URL = "http://api.openweathermap.org/data/2.5/"
     }
 
-    @GET("forecast/daily/")
+    @GET("forecast/")
     fun getForecast(@Query("q") cityName : String,
                     @Query("cnt") dayCount : Int) : Call<WeatherResponse>
 
