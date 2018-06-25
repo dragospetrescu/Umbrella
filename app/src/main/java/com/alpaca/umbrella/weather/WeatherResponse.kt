@@ -3,7 +3,7 @@ package com.alpaca.umbrella.weather
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse (@SerializedName("city") var city : City,
-                            @SerializedName("list") var forecast : List<ForecastDetail>)
+                            @SerializedName("list") var forecast : List<ForecastDetail>?)
 
 
 data class City(@SerializedName("name") var cityName : String,
@@ -22,6 +22,10 @@ data class Main (@SerializedName("temp") var temp: Double,
                  @SerializedName("pressure") var pressure: Double,
                  @SerializedName("humidity") var humidity: Double)
 
+/*
+ *  WeatherResponse -> List<ForecastDetail> -> List<WeatherDescription> -> main
+ *  Possible values: [Rain, Snow, Extreme, Clouds, others?]
+ */
 data class WeatherDescription(@SerializedName("main") var main : String,
                               @SerializedName("description") var description: String,
                               @SerializedName("icon") var icon: String)
