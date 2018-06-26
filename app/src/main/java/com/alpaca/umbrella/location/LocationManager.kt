@@ -1,17 +1,16 @@
 package com.alpaca.umbrella.location
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.v4.app.ActivityCompat;
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION;
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class LocationGetter constructor(activity: Activity) {
+class LocationManager constructor(activity: Activity) {
 
     private lateinit var client: FusedLocationProviderClient
     private var activity: Activity = activity
