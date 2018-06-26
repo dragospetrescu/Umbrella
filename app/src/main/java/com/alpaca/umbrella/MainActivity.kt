@@ -6,6 +6,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.alpaca.umbrella.weather.*
+import com.alpaca.umbrella.location.LocationGetter
+import com.alpaca.umbrella.weather.OpenWeatherAPI
+import com.alpaca.umbrella.weather.OpenWeatherInterceptor
+import com.alpaca.umbrella.weather.WeatherResponse
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,6 +26,12 @@ class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        val locationGetter = LocationGetter(this)
+        locationGetter.init()
+        locationGetter.getLocation()
+
 
         val apiClient = OkHttpClient.Builder()
                             .addInterceptor(OpenWeatherInterceptor()).build()
