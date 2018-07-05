@@ -16,7 +16,7 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        weatherManager = WeatherManager(applicationContext)
+        weatherManager = WeatherManager(this, applicationContext)
         weatherManager.init()
         locationManager = LocationManager(this, weatherManager)
         locationManager.init()
