@@ -1,5 +1,6 @@
 package com.alpaca.umbrella.weather
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -10,12 +11,11 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class WeatherManager constructor(private var applicationContext: Context) {
+class WeatherManager constructor(private var activity: Activity, private var applicationContext: Context) {
 
-
-    private lateinit var api : OpenWeatherAPI
+    private lateinit var api: OpenWeatherAPI
     private lateinit var retrofit: Retrofit
-    private var messageFactory: MessageFactory = MessageFactory()
+    private var messageFactory: MessageFactory = MessageFactory(activity)
 
     fun init() {
         val apiClient = OkHttpClient.Builder()
@@ -30,8 +30,7 @@ class WeatherManager constructor(private var applicationContext: Context) {
         api = retrofit.create(OpenWeatherAPI::class.java)
     }
 
-    fun getWeatherFromAPI(cityName : String? = null, latitude : Double? = null,
-                                  longitude: Double? = null) {
+    fun getWeatherFromAPI(cityName: String? = null, latitude: Double? = null, longitude: Double? = null) {
 
         val call: Call<WeatherResponse>
 
@@ -52,6 +51,9 @@ class WeatherManager constructor(private var applicationContext: Context) {
                 Log.d("RESPONSE BODY", response.body()?.toString())
 
                 if (response.isSuccessful) {
+
+
+
                     Log.d("TEMPERATURE", res?.forecast!![0].main.temp.toString())
                     Toast.makeText(applicationContext, messageFactory.get(res), Toast.LENGTH_LONG).show()
                 } else {

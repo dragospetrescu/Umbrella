@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.util.Log
+import com.alpaca.umbrella.R
 import com.alpaca.umbrella.weather.WeatherManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
